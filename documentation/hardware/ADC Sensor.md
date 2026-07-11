@@ -9,4 +9,4 @@ Pros:
 
 Cons:
 - reads 0-10V instead of 14.4 (max for battery)
-- requires external voltage devider circuits to be built.
+- requires external voltage divider circuits to be built.

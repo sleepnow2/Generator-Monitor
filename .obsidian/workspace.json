@@ -8,36 +8,18 @@
         "type": "tabs",
         "children": [
           {
-            "id": "6843ef1fbe5e870a",
+            "id": "894f0f8f12527a7a",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "excalidraw",
               "state": {
-                "file": "documentation/System Diagram.canvas",
-                "viewState": {
-                  "x": 160,
-                  "y": -790,
-                  "zoom": -1.0417050318308136
-                }
+                "file": "documentation/System Diagram.md"
               },
-              "icon": "lucide-layout-dashboard",
+              "icon": "excalidraw-icon",
               "title": "System Diagram"
             }
-          },
-          {
-            "id": "d3b6c32815ddd8fa",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "documentation/hardware/Manuals/em_series.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "em_series"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -200,23 +182,27 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "d3b6c32815ddd8fa",
+  "active": "894f0f8f12527a7a",
   "lastOpenFiles": [
-    "documentation/hardware/Manuals/DSE7310-MKII-DSE7320-MKII-Installation-Instructions.pdf",
-    "documentation/hardware/Manuals/em_series.pdf",
+    "embedded/data/config.json",
+    "embedded/data/data.json",
+    "embedded/data/wifi.json",
+    "documentation/System Diagram.md",
+    "embedded/data/config.json~",
+    "documentation/System Diagram.canvas",
+    "documentation/hardware/ADC Sensor.md",
+    "embedded/data",
+    "embedded/configurations.h",
+    "embedded/configurations.cpp",
+    "embedded/embedded.ino",
+    "embedded/sketch_jul11a.ino",
+    "embedded/sketch_jul11a/sketch_jul11a.ino",
+    "embedded/sketch_jul11a",
+    "documentation/Project definition.md",
+    "documentation/hardware/Programmable Logic Controller.md",
+    "documentation/hardware/Custom Hardware.md",
     "documentation/hardware/Manuals/inv_1562_4_0.jpg",
     "documentation/Drawing 2026-07-10 22.41.47.excalidraw.md",
-    "documentation/System Diagram.canvas",
-    "Excalidraw",
-    "documentation/Project definition.md",
-    "documentation/hardware/ADC Sensor.md",
-    "documentation/hardware/Custom Hardware.md",
-    "documentation/hardware/Programmable Logic Controller.md",
-    "documentation/hardware/Manuals",
-    "application/icon.svg",
-    "documentation/hardware",
-    "application/project.godot",
-    "embedded/main.cpp",
-    "documentation"
+    "application/icon.svg"
   ]
 }

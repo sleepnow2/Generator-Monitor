@@ -1,0 +1,111 @@
+{
+  "modbus-data": {
+    "baudrate": 119200,
+    "parity bit": "none",
+    "stop bit": 1,
+    "slaves":[
+      { 
+        "slave-id": "waveshare 8 channel analog input",
+        "address": 1,
+        "frequency": 1000,
+        "data": [
+          {
+            "parameter-id": "AC Voltage",
+            "address": 0,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": true
+          },
+          {
+            "parameter-id": "AC Amperage",
+            "address": 1,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": true
+          },
+          {
+            "parameter-id": "AC Frequency",
+            "address": 2,
+            "scale": 1.0,
+           "offset": 0.0,
+            "logged": true
+          },
+          {
+            "parameter-id": "Oil Pressure",
+            "address": 3,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": true
+          },
+          {
+            "parameter-id": "Coolant Temperature",
+            "address": 4,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": true
+          },
+          {
+            "parameter-id": "Overspeed lamp",
+            "address": 5,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": false
+          },
+          {
+            "parameter-id": "Overcrank lamp",
+            "address": 6,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": false
+          },
+          {
+            "parameter-id": "Remote start",
+            "address": 7,
+            "scale": 1.0,
+            "offset": 0.0,
+            "logged": false
+          }
+        ]
+      }
+    ]
+  },
+
+  "engine-run-status-indicator": {
+      "parameter-id": "Remote start",
+      "limit": 512.0,
+      "limit type": "over"
+  },
+
+  "modbus-alarms": [
+    {
+      "alarm-name": "Overspeed lamp active", 
+      "perameter-id": "Overspeed lamp",
+      "limit": 512.0,
+      "limit type": "over"
+    },
+    {
+      "alarm-name": "Overcrank lamp active", 
+      "perameter-id": "Overcrank lamp",
+      "limit": 512.0,
+      "limit type": "over"
+    },
+    {
+      "alarm-name": "Remote Start Activated", 
+      "perameter-id": "Remote Start",
+      "limit": 512.0,
+      "limit type": "over"
+    },
+    {
+      "alarm-name": "Coolant Temperature Critical", 
+      "perameter-id": "Coolant Temperature",
+      "limit": 220.0,
+      "limit type": "over"
+    },
+    {
+      "alarm-name": "Oil Pressure Critical", 
+      "perameter-id": "Oil Pressure",
+      "limit": 10.0,
+      "limit type": "under"
+    }
+  ]
+}

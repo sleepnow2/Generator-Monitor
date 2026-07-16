@@ -45,17 +45,27 @@ void setup() {
     // if we are in local setup mode, then do nothing else.
     while (1) {
       filemgr.handleClient();
-      if ((millis() + 1000) > last_log) {
+      if (millis() > last_log + 5000) {
         Serial.print("ip address = ");
         Serial.print(WiFi.softAPIP());
         Serial.println(":8080");
         last_log = millis();
       }
-      yield();
+      delay(1);
     }
   }
 }
 
+
 void loop() {
+  static uint64_t last_log = millis();
   filemgr.handleClient();
+  if (millis() > last_log + 5000) {
+    Serial.print("ip address = ");
+    Serial.print(WiFi.localIP());
+    Serial.print(":8080 - mac address = ");
+    Serial.println(WiFi.macAddress());
+    last_log = millis();
+  }
+  delay(1);
 }

@@ -14,9 +14,11 @@ enum WiFiMode {
 
 struct WiFiData {
   WiFiMode mode = ACCESS_POINT_MODE;
-  String ssid = "Genset_Setup_Netork";
+  String ssid = "Genset_Setup_Network";
   String password = "12345678";
-  IPAddress ip = IPAddress(192, 168, 4, 1);
+  IPAddress ip_address = IPAddress(192, 168, 4, 255);
+  IPAddress ip_gateway = IPAddress(192, 168, 4, 1);
+  IPAddress ip_netmask = IPAddress(255, 255, 255, 0);
 };
 
 WiFiData initializeWifi();

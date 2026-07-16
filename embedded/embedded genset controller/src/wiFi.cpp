@@ -1,28 +1,24 @@
 #include "wiFi.h"
 
-void throwException(String inp) {
-    Serial.print("exception. malformed ip address input:");
-    Serial.println(inp);
-    Serial.flush();
-    delay(100);
-    throw "nuhuh";
-}
+
+/*
+  IP address interpreter. 
+  TODO: Needs to have its inputs hardened to make sure that malformed input addreses aren't valid.
+*/
 IPAddress interperetIPAddress(String inp) {
-  uint8_t octet[4] = {192,168,4,1};
-  /*
+  uint8_t octet[4] = {0,0,0,0};
   uint8_t current_octet = 0;
   uint8_t i = 0;
-  while (inp[i] != '\0') {
+
+  for (uint8_t i = 0; i < inp.length(); i++) {
     if (inp[i] == '.') {
-      // if this is a decimal, move on to the next octet
+      // if this is a deliminator, move on to the next octet
       current_octet++;
     } else {
       octet[current_octet] *= 10;
       octet[current_octet] += inp[i]-'0';
     }
-    i++;
   }
-  */
   return IPAddress(octet[0],octet[1],octet[2],octet[3]);
 }
 
@@ -35,16 +31,37 @@ IPAddress interperetIPAddress(String inp) {
 WiFiData initializeWifi() {
   // requres that the file system is initialized and mounted.
   Serial.println("Opening config file wifi.json");
-  File config_file = FILE_SYSTEM.open(F("/wifi.json"), "r");
+  File config_file = FILE_SYSTEM.open(F("/configs/wifi.json"), "r");
+  WiFi.setTxPower(WIFI_POWER_19_5dBm);
 
   WiFiData wiFiData;
   if (config_file) {
+    Serial.println("success opening wifi folder, interpereting json.");
     JsonDocument config;
-    deserializeJson(config, config_file);
+    String config_text = config_file.readString();
+    Serial.println(config_text);
+    DeserializationError err = deserializeJson(config, config_text);
+    Serial.println(err.c_str());
 
     wiFiData.ssid = config["ssid"].as<String>();
+    Serial.print("ssid = ");
+    Serial.println(wiFiData.ssid);
+
     wiFiData.password = config["password"].as<String>();
-    wiFiData.ip = interperetIPAddress(config["ip-address"].as<String>());
+    Serial.print("password = ");
+    Serial.println(wiFiData.password);
+
+    wiFiData.ip_address = interperetIPAddress(config["ip-address"].as<String>());
+    Serial.print("ip-address = ");
+    Serial.println(wiFiData.ip_address);
+
+    wiFiData.ip_gateway = interperetIPAddress(config["ip-gateway"].as<String>());
+    Serial.print("ip-gateway = ");
+    Serial.println(wiFiData.ip_gateway);
+
+    wiFiData.ip_netmask = interperetIPAddress(config["ip-netmask"].as<String>());
+    Serial.print("ip-netmask = ");
+    Serial.println(wiFiData.ip_netmask);
 
     wiFiData.mode = STATION_MODE;
 
@@ -64,7 +81,7 @@ WiFiData initializeWifi() {
 WiFiData softAPMode() {
   WiFiData defaults;
   // begin WiFi in access point mode.
-  WiFi.softAPConfig(defaults.ip, IPAddress(192,168,1,1), IPAddress(255,255,255,0));
+  WiFi.softAPConfig(defaults.ip_address, defaults.ip_gateway, defaults.ip_netmask);
   WiFi.softAP(defaults.ssid, defaults.password);
   Serial.println("There was an issue setting up your device. Please connect over wifi to change configuration files.");
   Serial.print("Please connect to http://");
@@ -75,11 +92,15 @@ WiFiData softAPMode() {
   return defaults;
 }
 
+/*
+  station mode is the usual operation it should be in.
+*/
 WiFiData stationMode(WiFiData wiFiData) {
-  WiFi.config(wiFiData.ip, IPAddress(192,168,1,1), IPAddress(255,255,255,0));
+  WiFi.config(wiFiData.ip_address, wiFiData.ip_gateway, wiFiData.ip_gateway);
   WiFi.begin(wiFiData.ssid, wiFiData.password);
   uint8_t attempts = 0;
-  while (WiFi.status() != WL_CONNECTED || attempts < 20) {
+  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    Serial.println("connecting...");
     delay(1000);
     attempts++;
   }

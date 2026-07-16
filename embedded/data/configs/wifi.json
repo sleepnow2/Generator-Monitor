@@ -1,9 +1,0 @@
-{
-  // extremely basic network informaiton
-  "ssid": "",
-  "password": "",
-
-  // file networking host informaiton
-  "ip-address": "192.168.255.255",
-  "port": 80
-}

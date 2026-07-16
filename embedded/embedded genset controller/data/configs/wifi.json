@@ -1,0 +1,8 @@
+{
+  // extremely basic network information
+  "ssid": "",
+  "password": "",
+
+  // file networking host information
+  "ip-address": "192.168.4.1",
+}

@@ -4,9 +4,33 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DEFINES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ************************************************************************************************************************/
 // defines the serial terminal to something slightly more professional looking.
-#define FILE_MANAGER_PORT 8080
-#define FILE_SYSTEM FFat
 #define ARDUINOJSON_ENABLE_COMMENTS 1
+
+
+#define _LOG(level, text) {Serial.print(level);Serial.print(millis()),Serial.print("]");} Serial.println(text)
+// log levels [error = 0, warn = 1, info = 2, debug = 3, trace =  4]
+#define LOG_LEVEL 4
+#define LOG_ERROR(text) _LOG("[ERROR][T+", text) // error will always exist
+#if LOG_LEVEL > 0
+#define LOG_WARN(text) _LOG("[WARN][T+", text)
+#else
+#define LOG_WARN(text)
+#endif
+#if LOG_LEVEL > 1
+#define LOG_INFO(text) _LOG("[INFO][T+", text)
+#else
+#define LOG_INFO(text)
+#endif
+#if LOG_LEVEL > 2
+#define LOG_DEBUG(text) _LOG("[DEBUG][T+", text)
+#else
+#define LOG_DEBUG(text)
+#endif
+#if LOG_LEVEL > 3
+#define LOG_TRACE(text) _LOG("[TRACE][T+", text)
+#else
+#define LOG_TRACE(text)
+#endif
 
 /************************************************************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Libraries !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -21,11 +45,15 @@
 #include <ESPFMfGK.h>     // offers a wifi portal to edit files and folders inside the flash
 
 /************************************************************************************************************************
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Local Libs !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+************************************************************************************************************************/
+#include "WiFiService/WiFiService.h"      // offers basic types and definitions for custom wifi connection logic.
+#include "webFileServer/webFileServer.h"  // handles the file IO both internal and external.
+
+/************************************************************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GLOBALS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ************************************************************************************************************************/
-extern ESPFMfGK filemgr;  
 
-bool initializeFileSystem();
 void setup();
 void loop();
 

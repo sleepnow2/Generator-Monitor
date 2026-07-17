@@ -4,14 +4,7 @@ const uint64_t ms_minimum_alert_time = 0;
 
 namespace EmailService{
     static JsonArray recipients;
-    static EMailSender emailSender(
-        "sleepnow2@gmail.com",
-        "oucnpzrfekdmybrh",
-        "sleepnow2@gmail.com",
-        "alex olson",
-        "smtp.gmail.com",
-        465
-    );
+    static EMailSender emailSender("","");
 
     bool init() {
         LOG_TRACE();
@@ -20,30 +13,33 @@ namespace EmailService{
             LOG_ERROR("Unable to read email config files.");
             return false;
         }
-        
-        static String smtpServer = config["sender-details"]["smtp-server"].as<String>();
-        LOG_DEBUG("smtpServer = " + smtpServer);
-        static uint16_t smtpPort = config["sender-details"]["smtp-port"].as<uint16_t>();
-        LOG_DEBUG("smtpPort = " + (String)smtpPort);
-        static String senderLogin = config["sender-details"]["email-login"].as<String>();
-        LOG_DEBUG("senderLogin = " + senderLogin);
-        static String senderPassword = config["sender-details"]["email-password"].as<String>();
-        LOG_DEBUG("senderPassword = " + senderPassword);
-        static String senderEmailAddress = config["sender-details"]["email-address"].as<String>();
-        LOG_DEBUG("senderEmailAddress = " + senderEmailAddress);
-        static String senderName = config["sender-details"]["sender-name"].as<String>();
-        LOG_DEBUG("senderName = " + senderName);
 
-        /*
-        emailSender = EMailSender(
-            senderLogin.c_str(), 
-            senderPassword.c_str(), 
-            senderEmailAddress.c_str(), 
-            senderName.c_str(), 
-            smtpServer.c_str(), 
-            smtpPort
-        );
-        */
+        String tmp;
+        
+        tmp = config["sender-details"]["smtp-server"].as<String>();
+        LOG_DEBUG("smtp-server = " + tmp);
+        emailSender.setSMTPServer(tmp.c_str()); 
+
+        uint16_t smtpPort = config["sender-details"]["smtp-port"].as<uint16_t>();
+        LOG_DEBUG("smtp-port = " + (String)smtpPort);
+        emailSender.setSMTPPort(smtpPort); 
+
+        tmp = config["sender-details"]["email-login"].as<String>();
+        LOG_DEBUG("senderLogin = " + tmp);
+        emailSender.setEMailLogin(tmp.c_str()); 
+
+        tmp = config["sender-details"]["email-password"].as<String>();
+        LOG_DEBUG("senderPassword = " + tmp);
+        emailSender.setEMailPassword(tmp.c_str()); 
+
+        tmp = config["sender-details"]["email-address"].as<String>();
+        LOG_DEBUG("senderEmailAddress = " + tmp);
+        emailSender.setEMailFrom(tmp.c_str()); 
+
+        tmp = config["sender-details"]["sender-name"].as<String>();
+        LOG_DEBUG("senderName = " + tmp);
+        emailSender.setNameFrom(tmp.c_str()); 
+        
 
         recipients = config["recipient-address"];
         LOG_DEBUG(recipients.size()); 

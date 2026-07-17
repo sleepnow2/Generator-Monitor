@@ -8,37 +8,29 @@
 #define EMAIL_ENABLE_INTERNAL_SSLCLIENT 1
 
 
-#define _LOG(level, text) { \
-    Serial.print(level);\
-    Serial.print(millis());\
-    Serial.print("][");\
-    Serial.print(__FILE__);\
-    Serial.print(":");\
-    Serial.print(__LINE__);\
-    Serial.print("] ");\
-    Serial.print(__FUNCTION__);\
-    Serial.print("(): ");\
-}   Serial.println(text)
+#define _LOG(level, text) \
+    Serial.printf("[%s][%6u][%s:%u] %s(): ", level, millis(), __FILE__, __LINE__, __FUNCTION__);\
+    Serial.println(text)
 // log levels [error = 0, warn = 1, info = 2, debug = 3, trace =  4]
 #define LOG_LEVEL 3
-#define LOG_ERROR(text) _LOG("[E][", text) // error will always exist
+#define LOG_ERROR(text) _LOG("E", text) // error will always exist
 #if LOG_LEVEL > 0
-#define LOG_WARN(text) _LOG("[W][", text)
+#define LOG_WARN(text) _LOG("W", text)
 #else
 #define LOG_WARN(text)
 #endif
 #if LOG_LEVEL > 1
-#define LOG_INFO(text) _LOG("[I][", text)
+#define LOG_INFO(text) _LOG("I", text)
 #else
 #define LOG_INFO(text)
 #endif
 #if LOG_LEVEL > 2
-#define LOG_DEBUG(text) _LOG("[D][", text)
+#define LOG_DEBUG(text) _LOG("D", text)
 #else
 #define LOG_DEBUG(text)
 #endif
 #if LOG_LEVEL > 3
-#define LOG_TRACE(text) _LOG("[T][", text)
+#define LOG_TRACE(text) _LOG("T", text)
 #else
 #define LOG_TRACE(text)
 #endif

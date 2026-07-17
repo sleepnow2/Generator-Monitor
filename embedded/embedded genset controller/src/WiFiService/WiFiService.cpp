@@ -1,3 +1,4 @@
+#line 1 "WiFiService.cpp"
 #include "WiFiService.h"
 
 namespace WiFiService {
@@ -6,7 +7,7 @@ namespace WiFiService {
 		TODO: Needs to have its inputs hardened to make sure that malformed input addreses aren't valid.
 	*/
 	IPAddress interperetIPAddress(String inp) {
-		LOG_TRACE("WiFiService::interpretIPAddress");
+		LOG_TRACE();
 		uint8_t octet[4] = {0,0,0,0};
 		uint8_t current_octet = 0;
 
@@ -31,7 +32,7 @@ namespace WiFiService {
 		if we fail to connect in ten seconds, we will instead default to wifi access point mode.
 	*/
 	WiFiService::WiFiData init() {
-		LOG_TRACE("WiFiService::init");
+		LOG_TRACE();
 		// requres that the file system is initialized and mounted.
 		LOG_INFO("Opening config file wifi.json");
 		WiFi.setTxPower(WIFI_POWER_19_5dBm);
@@ -49,6 +50,10 @@ namespace WiFiService {
 			LOG_DEBUG("ip-gateway = " + wiFiData.ip_gateway.toString());
 			wiFiData.ip_netmask = interperetIPAddress(config["ip-netmask"].as<String>());
 			LOG_DEBUG("ip-netmask = " + wiFiData.ip_netmask.toString());
+			wiFiData.ip_dnsadr1 = interperetIPAddress(config["ip-dnsadr1"].as<String>());
+			LOG_DEBUG("ip-dnsadr1 = " + wiFiData.ip_dnsadr1.toString());
+			wiFiData.ip_dnsadr2 = interperetIPAddress(config["ip-dnsadr2"].as<String>());
+			LOG_DEBUG("ip-dnsadr2 = " + wiFiData.ip_dnsadr2.toString());
 			wiFiData.mode = WiFiService::STATION_MODE;
 
 			// attempt to connect to the wifi and send back the data to any functions who need it.
@@ -66,7 +71,7 @@ namespace WiFiService {
 		this mode of operation does not perform anything else other than setting up the files.
 	*/
 	WiFiService::WiFiData softAPMode() {
-		LOG_TRACE("WiFiService::softAPMode");
+		LOG_TRACE();
 		WiFiService::WiFiData defaults;
 		// begin WiFi in access point mode.
 		WiFi.softAPConfig(defaults.ip_address, defaults.ip_gateway, defaults.ip_netmask);
@@ -80,8 +85,14 @@ namespace WiFiService {
 		station mode is the usual operation it should be in.
 	*/
 	WiFiData stationMode(WiFiData wiFiData) {
-		LOG_TRACE("WiFiService::stationMode");
-		WiFi.config(wiFiData.ip_address, wiFiData.ip_gateway, wiFiData.ip_gateway);
+		LOG_TRACE();
+		WiFi.config(
+			wiFiData.ip_address, 
+			wiFiData.ip_gateway, 
+			wiFiData.ip_gateway, 
+			wiFiData.ip_dnsadr1, 
+			wiFiData.ip_dnsadr2
+		);
 		WiFi.begin(wiFiData.ssid, wiFiData.password);
 		uint8_t attempts = 0;
 		while (WiFi.status() != WL_CONNECTED && attempts < 20) {

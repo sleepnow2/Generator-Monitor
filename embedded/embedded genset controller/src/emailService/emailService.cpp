@@ -1,31 +1,40 @@
+#line 1 "emailService.cpp"
 #include "emailService.h"
 const uint64_t ms_minimum_alert_time = 0;
-EMailSender emailSender;
-JsonArray recipients;
-
 
 namespace EmailService{
+    static JsonArray recipients;
+    static EMailSender emailSender(
+        "sleepnow2@gmail.com",
+        "oucnpzrfekdmybrh",
+        "sleepnow2@gmail.com",
+        "alex olson",
+        "smtp.gmail.com",
+        465
+    );
+
     bool init() {
-        LOG_TRACE("EmailService::init");
+        LOG_TRACE();
         JsonDocument config;
-        if (!WebFileServer::readConfig(config, "/configs/wifi.json")) {
+        if (!WebFileServer::readConfig(config, "/configs/email.json")) {
             LOG_ERROR("Unable to read email config files.");
             return false;
         }
         
-        String smtpServer = config["sender-details"]["smtp-server"].as<String>();
+        static String smtpServer = config["sender-details"]["smtp-server"].as<String>();
         LOG_DEBUG("smtpServer = " + smtpServer);
-        uint16_t smtpPort = config["sender-details"]["smtp-port"].as<uint16_t>();
-        LOG_DEBUG("smtpPort = " + smtpPort);
-        String senderLogin = config["sender-details"]["email-login"].as<String>();
+        static uint16_t smtpPort = config["sender-details"]["smtp-port"].as<uint16_t>();
+        LOG_DEBUG("smtpPort = " + (String)smtpPort);
+        static String senderLogin = config["sender-details"]["email-login"].as<String>();
         LOG_DEBUG("senderLogin = " + senderLogin);
-        String senderPassword = config["sender-details"]["email-password"].as<String>();
+        static String senderPassword = config["sender-details"]["email-password"].as<String>();
         LOG_DEBUG("senderPassword = " + senderPassword);
-        String senderEmailAddress = config["sender-details"]["email-address"].as<String>();
+        static String senderEmailAddress = config["sender-details"]["email-address"].as<String>();
         LOG_DEBUG("senderEmailAddress = " + senderEmailAddress);
-        String senderName = config["sender-details"]["sender-name"].as<String>();
+        static String senderName = config["sender-details"]["sender-name"].as<String>();
         LOG_DEBUG("senderName = " + senderName);
 
+        /*
         emailSender = EMailSender(
             senderLogin.c_str(), 
             senderPassword.c_str(), 
@@ -34,12 +43,15 @@ namespace EmailService{
             smtpServer.c_str(), 
             smtpPort
         );
+        */
 
         recipients = config["recipient-address"];
+        LOG_DEBUG(recipients.size()); 
+        return 1;
     }
 
     EMailSender::EMailMessage generateStartupMessage() {
-        LOG_TRACE("EmailService::generateStartupMessage");
+        LOG_TRACE();
         static EMailSender::EMailMessage message;
 
         // so we only load this item into memory once. 
@@ -55,15 +67,20 @@ namespace EmailService{
     }
 
     void sendMessage(EMailSender::EMailMessage message) {
-        LOG_TRACE("EmailService::sendMessage");
+        LOG_TRACE();
+        EMailSender::Response resp = emailSender.send("sleepnow2@gmail.com", message);
+        LOG_DEBUG(resp.code);
+        LOG_DEBUG(resp.status);
+        LOG_DEBUG(resp.desc);
 
-        for (uint8_t i = 0; i < recipients.size(); i++) {
-            String recipient = recipients[0].as<String>();
-            emailSender.send(recipient, message);
-        }
+        //for (uint8_t i = 0; i < recipients.size(); i++) {
+        //    String recipient = recipients[0].as<String>();
+        //    emailSender.send("sleepnow2@gmail.com", message);
+        //}
     }
 
     void testEmailService1() {
+        LOG_TRACE();
         EmailService::init();
         EMailSender::EMailMessage m = EmailService::generateStartupMessage();
         EmailService::sendMessage(m);

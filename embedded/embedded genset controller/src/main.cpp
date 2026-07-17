@@ -1,3 +1,4 @@
+#line 1 "main.cpp"
 #include "main.h" // the basic includes involved with nearly everyone.
 
 
@@ -24,16 +25,18 @@ void setup() {
 			delay(1);
 		}
 	}
+
+	EmailService::testEmailService1();
 }
 
 
 void loop() {
-	LOG_TRACE("loop");
+	LOG_TRACE();
 	static uint64_t last_log = millis();
 	WebFileServer::handleClient();
 	if (millis() > last_log + 5000) {
-		LOG_INFO("ip address = " + WiFi.softAPIP().toString() + ":8080");
+		//LOG_INFO("ip address = " + WiFi.localIP().toString() + ":8080");
 		last_log = millis();
 	}
-	delay(1);
+	delay(100);
 }

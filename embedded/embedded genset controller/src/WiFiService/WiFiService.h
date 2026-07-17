@@ -15,6 +15,8 @@ namespace WiFiService {
 		IPAddress ip_address = IPAddress(192, 168, 4, 255);
 		IPAddress ip_gateway = IPAddress(192, 168, 4, 1);
 		IPAddress ip_netmask = IPAddress(255, 255, 255, 0);
+		IPAddress ip_dnsadr1 = IPAddress(1, 1, 1, 1); // cloudfare public dns server 
+		IPAddress ip_dnsadr2 = IPAddress(8, 8, 8, 8); // google public dns server
 	};
 
 	WiFiData init();

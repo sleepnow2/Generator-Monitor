@@ -5,29 +5,40 @@
 ************************************************************************************************************************/
 // defines the serial terminal to something slightly more professional looking.
 #define ARDUINOJSON_ENABLE_COMMENTS 1
+#define EMAIL_ENABLE_INTERNAL_SSLCLIENT 1
 
 
-#define _LOG(level, text) {Serial.print(level);Serial.print(millis()),Serial.print("]");} Serial.println(text)
+#define _LOG(level, text) { \
+    Serial.print(level);\
+    Serial.print(millis());\
+    Serial.print("][");\
+    Serial.print(__FILE__);\
+    Serial.print(":");\
+    Serial.print(__LINE__);\
+    Serial.print("] ");\
+    Serial.print(__FUNCTION__);\
+    Serial.print("(): ");\
+}   Serial.println(text)
 // log levels [error = 0, warn = 1, info = 2, debug = 3, trace =  4]
-#define LOG_LEVEL 4
-#define LOG_ERROR(text) _LOG("[ERROR][T+", text) // error will always exist
+#define LOG_LEVEL 3
+#define LOG_ERROR(text) _LOG("[E][", text) // error will always exist
 #if LOG_LEVEL > 0
-#define LOG_WARN(text) _LOG("[WARN][T+", text)
+#define LOG_WARN(text) _LOG("[W][", text)
 #else
 #define LOG_WARN(text)
 #endif
 #if LOG_LEVEL > 1
-#define LOG_INFO(text) _LOG("[INFO][T+", text)
+#define LOG_INFO(text) _LOG("[I][", text)
 #else
 #define LOG_INFO(text)
 #endif
 #if LOG_LEVEL > 2
-#define LOG_DEBUG(text) _LOG("[DEBUG][T+", text)
+#define LOG_DEBUG(text) _LOG("[D][", text)
 #else
 #define LOG_DEBUG(text)
 #endif
 #if LOG_LEVEL > 3
-#define LOG_TRACE(text) _LOG("[TRACE][T+", text)
+#define LOG_TRACE(text) _LOG("[T][", text)
 #else
 #define LOG_TRACE(text)
 #endif
@@ -47,9 +58,9 @@
 /************************************************************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Local Libs !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ************************************************************************************************************************/
-#include "WiFiService/WiFiService.h"      // offers basic types and definitions for custom wifi connection logic.
-#include "webFileServer/webFileServer.h"  // handles the file IO both internal and external.
-
+#include "WiFiService/WiFiService.h"        // offers basic types and definitions for custom wifi connection logic.
+#include "webFileServer/webFileServer.h"    // handles the file IO both internal and external.
+#include "emailService/emailService.h"      // handles everything email related. 
 /************************************************************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GLOBALS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ************************************************************************************************************************/

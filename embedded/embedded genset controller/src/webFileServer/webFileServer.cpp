@@ -1,3 +1,4 @@
+#line 1 "webFileServer"
 // this files job is to initialize and handle the webserver and file system.  
 
 #include "webFileServer.h"
@@ -10,7 +11,7 @@ namespace WebFileServer {
 	this initializes the file system so everything else can use it. we have a grad total of 9.9 MB to use.
 	*/
 	bool init(bool formatOnFailiure = true) {
-		LOG_TRACE("WebFileServer::init");
+		LOG_TRACE();
 		// initialize the file system so configuration files can be read.
 		LOG_DEBUG("Initializing FileSystem");
 		if (!FILE_SYSTEM.begin() && formatOnFailiure) {
@@ -66,7 +67,7 @@ namespace WebFileServer {
 
 	bool begin() {
 		using WebFileServer::filemgr;
-		LOG_TRACE("WebFileServer::begin");
+		LOG_TRACE();
 		if (!WiFi.isConnected()) {
 			LOG_ERROR("Internet connction required for file manager to function.");
 			return false;
@@ -106,7 +107,7 @@ namespace WebFileServer {
 		
 	*/
 	bool readConfig(JsonDocument &doc, const char* path) {
-		LOG_TRACE("WebFileServer::readConfig");
+		LOG_TRACE();
 		File config_file = FILE_SYSTEM.open(path, "r");		
 		if (!config_file) {
 			return false;
@@ -122,7 +123,7 @@ namespace WebFileServer {
 	}
 
 	void handleClient() {
-		LOG_TRACE("WebFileServer::handleClient()");
+		LOG_TRACE();
 		WebFileServer::filemgr.handleClient();
 	}
 }

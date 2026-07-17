@@ -37,7 +37,7 @@
 ************************************************************************************************************************/
 #include <Arduino.h>
 #include <WiFi.h>         // for connection to the wifi
-// #include <EMailSender.h>  // for sending emails over SMTP to the users
+#include <EMailSender.h>  // for sending emails over SMTP to the users
 // this allows for me to read json files in a basic way. This allows for config files to be written in a very human readable way.
 #include <ArduinoJson.h>
 #include <FS.h>           // basic file system interactions agnostic of actual FS used.

@@ -1,10 +1,18 @@
 {
   "sender-details": {
-    "email-smtp-server": "smtp.google.com", // pre-filled for google. adjust for your smtp server
-    "email-address": "jhondoe@gmail.com", // this is just actually your email address
-    "email-password": "", // your 16 character app password... not your login creds.
-    "sender-name": "jhon doe",
-    "email-smtp-port": 587 // don't touch. this is the port for STARTTLS messages and it is not pretty when this is touched.
+    // pre-filled for google. adjust for your smtp server
+    "smtp-server": "smtp.google.com", 
+    // don't touch. this is the port for STARTTLS messages and it is not pretty when this is touched.
+    "smtp-port": 587, 
+    // this is usually your email address, but the smtp server you are using might be different.
+    "email-login": "jhondoe@gmail.com", 
+    // your 16 character app password... not your login creds.
+    "email-password": "", 
+    // this is just actually your email address
+    "email-address": "jhondoe@gmail.com", 
+
+    "sender-name": "jhon doe"
+    
   },
   "recipient-address": [
     "jhondoe@gmail.com",

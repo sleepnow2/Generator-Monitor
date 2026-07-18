@@ -7,6 +7,7 @@
 
 namespace WebFileServer {
     extern ESPFMfGK filemgr;
+    extern TaskHandle_t filemgrHandle;
     
     /*
     Mounts the partition as a FFat file system. 
@@ -14,7 +15,6 @@ namespace WebFileServer {
     */
     bool init(bool formatOnFailiure);
     bool begin();
-    void handleClient();
     /*
 	reads the configuration file mentoned in the path, and places the contents into the provided doc argument.
 	*/

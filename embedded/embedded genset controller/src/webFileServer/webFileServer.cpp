@@ -7,6 +7,9 @@
 
 namespace WebFileServer {
 	ESPFMfGK filemgr(FILE_MANAGER_PORT);
+	TaskHandle_t filemgrHandle;
+
+	void handleClient(void *inp);
 	/*
 	this initializes the file system so everything else can use it. we have a grad total of 9.9 MB to use.
 	*/
@@ -98,7 +101,25 @@ namespace WebFileServer {
 		}
 		LOG_INFO("Open Filemanager with http://"+WiFi.localIP().toString()+":"+FILE_MANAGER_PORT);
 
+		BaseType_t res = xTaskCreate(
+			WebFileServer::handleClient,
+			"WebFileServer::handleClient",
+			100000, // needs to be optomized. This just works, but hasn't been trimmed.
+			NULL,
+			1,
+			&filemgrHandle
+		);
+
 		return true;
+	}
+
+	void handleClient(void *inp) {
+		LOG_TRACE("thread started!");
+		for(;;) {
+			WebFileServer::filemgr.handleClient();
+			vTaskDelay(5/portTICK_PERIOD_MS);
+		}
+		LOG_ERROR("thread ended!");
 	}
 
 	/*
@@ -120,10 +141,5 @@ namespace WebFileServer {
 			return false;
 		}
 		return true;
-	}
-
-	void handleClient() {
-		LOG_TRACE();
-		WebFileServer::filemgr.handleClient();
 	}
 }

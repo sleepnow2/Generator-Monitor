@@ -1,42 +1,34 @@
 #line 1 "main.cpp"
 #include "main.h" // the basic includes involved with nearly everyone.
 
+SemaphoreHandle_t SerialMutex = xSemaphoreCreateMutex();
 
 void setup() {
 	Serial.begin(115200);
 	while (!Serial);
 	LOG_DEBUG("hello!");
-	delay(2000);
+	delay(5000);
 	LOG_INFO("Initializing system...");
-	Serial.flush();
 
-	WebFileServer::init(true);
-	WiFiService::WiFiData wiFiData = WiFiService::init();
-	WebFileServer::begin();
+	WebFileServer::init(true); // sets up the file system
+	WiFiService::WiFiData wiFiData = WiFiService::init(); // sets up the wifi access point
+	WebFileServer::begin(); // begins the website thread. This thread is not pinned to a core.
+	
 	if (wiFiData.mode == WiFiService::ACCESS_POINT_MODE) {
 		uint64_t last_log = millis();
 		// if we are in local setup mode, then do nothing else.
-		while (1) {
-			WebFileServer::handleClient();
-			if (millis() > last_log + 5000) {
-				LOG_INFO("ip address = " + WiFi.softAPIP().toString() + ":8080");
-				last_log = millis();
-			}
-			delay(1);
+		for (;;) {
+			LOG_INFO("ip address = " + WiFi.softAPIP().toString() + ":8080");
+			delay(5000);
 		}
 	}
 
-	EmailService::testEmailService1();
+	LOG_INFO("test email service!");
+	//EmailService::testEmailService1();
 }
 
 
 void loop() {
-	LOG_TRACE();
-	static uint64_t last_log = millis();
-	WebFileServer::handleClient();
-	if (millis() > last_log + 5000) {
-		//LOG_INFO("ip address = " + WiFi.localIP().toString() + ":8080");
-		last_log = millis();
-	}
-	delay(100);
+	LOG_INFO("ip address = " + WiFi.localIP().toString() + ":8080");
+	delay(5000);
 }

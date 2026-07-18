@@ -8,11 +8,17 @@ namespace WiFiService {
 		TODO: Needs to have its inputs hardened to make sure that malformed input addreses aren't valid.
 	*/
 	IPAddress interperetIPAddress(String inp) {
-		LOG_TRACE();
+		LOG_TRACEF("inp = %s", inp);
 		uint8_t octet[4] = {0,0,0,0};
 		uint8_t current_octet = 0;
 
+		if (inp == "") {
+			LOG_WARNF("Illegal input detected. input %s should be in the format of xxx.xxx.xxx.xxx with xxx no bigger than 255.", inp);
+			return IPAddress(0,0,0,0);
+		}
+
 		for (uint8_t i = 0; i < inp.length(); i++) {
+			//LOG_TRACEF("loop %d: octet:[%d,%d,%d,%d] - current_octet:%d", i, octet[0], octet[1], octet[2], octet[3], current_octet);
 			if (inp[i] == '.') {
 				// if this is a deliminator, move on to the next octet
 				current_octet++;

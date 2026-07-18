@@ -7,31 +7,55 @@
 #define ARDUINOJSON_ENABLE_COMMENTS 1
 #define EMAIL_ENABLE_INTERNAL_SSLCLIENT 1
 
-
+#define _INTERNAL_LOG_HEADER(level) Serial.printf("[%s][%6u][%s:%u] %s(): ", level, millis(), __FILE__, __LINE__, __FUNCTION__)
+#define _LOGF(level, ...) \
+    xSemaphoreTake(SerialMutex, portMAX_DELAY);\
+    _INTERNAL_LOG_HEADER(level);\
+    Serial.printf(__VA_ARGS__);\
+    Serial.println();\
+    Serial.flush();\
+    xSemaphoreGive(SerialMutex)
 #define _LOG(level, text) \
-    Serial.printf("[%s][%6u][%s:%u] %s(): ", level, millis(), __FILE__, __LINE__, __FUNCTION__);\
-    Serial.println(text)
+    xSemaphoreTake(SerialMutex, portMAX_DELAY);\
+    _INTERNAL_LOG_HEADER(level);\
+    Serial.println(text);\
+    Serial.flush();\
+    xSemaphoreGive(SerialMutex)
+
 // log levels [error = 0, warn = 1, info = 2, debug = 3, trace =  4]
-#define LOG_LEVEL 3
-#define LOG_ERROR(text) _LOG("E", text) // error will always exist
+#define LOG_LEVEL 4
+#define LOG_ERRORF(...) _LOGF("E", __VA_ARGS__) // error will always exist
+#define LOG_ERROR(text) _LOG ("E", text)
+
 #if LOG_LEVEL > 0
-#define LOG_WARN(text) _LOG("W", text)
+#define LOG_WARNF(...) _LOGF("W", __VA_ARGS__)
+#define LOG_WARN(text) _LOG ("W", text)
 #else
+#define LOG_WARNF(...)
 #define LOG_WARN(text)
 #endif
+
 #if LOG_LEVEL > 1
-#define LOG_INFO(text) _LOG("I", text)
+#define LOG_INFOF(...) _LOGF("I", __VA_ARGS__)
+#define LOG_INFO(text) _LOG ("I", text)
 #else
+#define LOG_INFOF(...)
 #define LOG_INFO(text)
 #endif
+
 #if LOG_LEVEL > 2
-#define LOG_DEBUG(text) _LOG("D", text)
+#define LOG_DEBUGF(...) _LOGF("D", __VA_ARGS__)
+#define LOG_DEBUG(text) _LOG ("D", text)
 #else
+#define LOG_DEBUGF(...)
 #define LOG_DEBUG(text)
 #endif
+
 #if LOG_LEVEL > 3
-#define LOG_TRACE(text) _LOG("T", text)
+#define LOG_TRACEF(...) _LOGF("T", __VA_ARGS__)
+#define LOG_TRACE(text) _LOG ("T", text)
 #else
+#define LOG_TRACEF(...)
 #define LOG_TRACE(text)
 #endif
 
@@ -56,6 +80,8 @@
 /************************************************************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! GLOBALS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ************************************************************************************************************************/
+extern SemaphoreHandle_t SerialMutex;
+
 
 void setup();
 void loop();

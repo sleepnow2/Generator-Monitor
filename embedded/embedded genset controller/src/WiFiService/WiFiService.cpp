@@ -1,5 +1,6 @@
 #line 1 "WiFiService.cpp"
 #include "WiFiService.h"
+#include <esp_wifi.h>
 
 namespace WiFiService {
 	/*
@@ -35,7 +36,6 @@ namespace WiFiService {
 		LOG_TRACE();
 		// requres that the file system is initialized and mounted.
 		LOG_INFO("Opening config file wifi.json");
-		WiFi.setTxPower(WIFI_POWER_19_5dBm);
 		JsonDocument config;
 		WiFiService::WiFiData wiFiData;
 
@@ -72,10 +72,13 @@ namespace WiFiService {
 	*/
 	WiFiService::WiFiData softAPMode() {
 		LOG_TRACE();
+		WiFi.disconnect(false, true);
 		WiFiService::WiFiData defaults;
 		// begin WiFi in access point mode.
 		WiFi.softAPConfig(defaults.ip_address, defaults.ip_gateway, defaults.ip_netmask);
-		WiFi.softAP(defaults.ssid, defaults.password);
+		WiFi.softAP(defaults.ssid, defaults.password, 11, 0, 1);
+		esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20);
+		esp_wifi_set_max_tx_power(4);
 		LOG_WARN("There was an issue setting up your device. Please connect over wifi to change configuration files.");
 		LOG_WARN("Please connect to http://"+WiFi.softAPIP().toString()+":"+FILE_MANAGER_PORT+"/ for the file system");
 		return defaults;
@@ -86,6 +89,7 @@ namespace WiFiService {
 	*/
 	WiFiData stationMode(WiFiData wiFiData) {
 		LOG_TRACE();
+		WiFi.disconnect(false, true);
 		WiFi.config(
 			wiFiData.ip_address, 
 			wiFiData.ip_gateway, 

@@ -68,7 +68,7 @@ namespace WebFileServer {
 	bool begin() {
 		using WebFileServer::filemgr;
 		LOG_TRACE();
-		if (!WiFi.isConnected()) {
+		if (!WiFi.isConnected() && WiFi.getMode() == WIFI_MODE_STA) {
 			LOG_ERROR("Internet connction required for file manager to function.");
 			return false;
 		}
